@@ -1,0 +1,128 @@
+---
+title: "R Notebook" 
+date: '`r format(Sys.time(), "%Y/%m/%d %H:%M")`'
+output: 
+    powerpoint_presentation:
+      reference_doc: template.pptx
+tags: [nothing, nothingness]
+abstract: |
+  This is the abstract.
+
+  It consists of two paragraphs.
+---
+<style type="text/css">
+body, td {
+   font-size: 24px;
+}
+code.r{
+  font-size: 15px;
+}
+pre {
+  font-size: 14px \\フォントサイズをためのおまじない、のはずなんだが、結局いじれない
+}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## R Markdown
+
+\fontsize{22pt}{0cm}\selectfont This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
+
+## Slide with Bullets
+
+- Bullet 1
+- Bullet 2
+- Bullet 3
+
+## Slide with R Output
+:::::: {.columns}
+::: {.column width="50%"}
+###### Flextableで**格好良く**した表
+  
+```{r, echo=FALSE}
+library(magrittr)
+library(flextable)
+dt = mtcars[1:10, 1:4] %>% round(., 0)
+dtx = flextable(dt)
+myft <- theme_vanilla(dtx) %>% merge_v(., j = c("mpg", "cyl") )
+myft <- set_header_labels( myft, cyl = "サムシングエルス" )　 %>% width(., j = c(2, 4), c(2, 1)) %>% 
+  compose(i = ~ !is.na(hp), j = "hp", 
+          value = as_paragraph(
+            as_chunk(hp, formater = function(x) sprintf("%.0f", x))
+          ) ) %>% 
+    compose(i = ~ !is.na(hp), j = 1, 
+          value = as_paragraph(
+            as_chunk(mpg, formater = function(x) sprintf("%.0f", x))
+          ) ) %>% 
+      compose(i = ~ !is.na(hp), j = 2, 
+          value = as_paragraph(
+            as_chunk(dt$cyl, formater = function(x) sprintf("%.0f", x))
+          ) ) %>% 
+      compose(i = ~ !is.na(hp), j = "disp", 
+          value = as_paragraph(
+            as_chunk(disp, formater = function(x) sprintf("%.0f", x))
+          ) ) %>% 
+  bg(., bg = "blue", part = "header") %>%  color(., color = "white", part = "header") %>% 
+color(., i = ~ mpg < 16, j = ~ disp + hp, color = "orange") %>% 
+  bold(., i = ~ mpg < 16, j = ~ disp, bold = TRUE)
+# myft = autofit(myft)
+myft
+```
+:::
+
+::: {.column width="50%"}
+通常の表
+```{r cars, echo = TRUE}
+summary(cars)
+```
+:::
+::::::
+
+## Slide with Plot
+
+```{r pressure}
+plot(pressure)
+```
+
+## Slide with Left and Right Output
+:::::: {.columns}
+::: {.column width="40%"}
+kableでテーブルを表示する方法もある
+```{r, echo=FALSE}
+knitr::kable(head(mtcars, 3))
+```
+
+:::
+::: {.column width="60%"}
+![ここにキャプションをつけられる](/home/tomoaki_hori/hobby/cell-images-for-detecting-malaria/cell_images/Parasitized/C99P60ThinF_IMG_20150918_142334_cell_9.png)
+:::
+::::::
+
+## 今度こそ画像の表示  
+![ここにキャプションをつけられる](/home/tomoaki_hori/hobby/cell-images-for-detecting-malaria/cell_images/Parasitized/C99P60ThinF_IMG_20150918_142334_cell_9.png)
+
+
+## Slide with Top and Bottom Output
+:::::: {.rows}
+::: {.row width="40%"}
+kableでテーブルを表示する方法もある←失敗
+```{r, echo=FALSE}
+knitr::kable(head(mtcars, 3))
+```
+
+:::
+::: {.row width="60%"}
+![ここにキャプションをつけられる](/home/tomoaki_hori/hobby/cell-images-for-detecting-malaria/cell_images/Parasitized/C99P60ThinF_IMG_20150918_142334_cell_9.png)
+:::
+::::::
+
+## 今度こそtableの表示  
+tabun
+```{r, echo=FALSE}
+knitr::kable(dt)
+```
+
